@@ -1,0 +1,7 @@
+# Ignore Python bytecode files
+__pycache__/
+
+# Ignore .db files
+*.db
+
+.vscode/
