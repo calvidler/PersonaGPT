@@ -2,22 +2,19 @@ import sqlite3
 import datetime
 import json
 import os
+import threading
 
 
 class WordDatabase:
     def __init__(self, db_file):
         self.db_file = db_file
-        self.conn = None
 
-    def connect(self):
-        self.conn = sqlite3.connect(self.db_file)
-        self.create_tables()
-        self.load_agents_from_config()
+    def get_conn(self):
+        return sqlite3.connect(self.db_file)
 
-    def disconnect(self):
-        if self.conn:
-            self.conn.close()
-            self.conn = None
+    def disconnect(self, conn):
+        if conn:
+            conn.close()
 
     def create_tables(self):
         agents_table_query = """
@@ -41,37 +38,44 @@ class WordDatabase:
             )
         """
 
-        with self.conn:
-            self.conn.execute(agents_table_query)
-            self.conn.execute(dialog_table_query)
+        conn = self.get_conn()
+        with conn:
+            conn.execute(agents_table_query)
+            conn.execute(dialog_table_query)
+        self.disconnect(conn)
 
     def load_agents_from_config(self):
         query = """
             SELECT COUNT(*) FROM agents
         """
-        cursor = self.conn.execute(query)
-        count = cursor.fetchone()[0]
-        if count == 0:
-            with open("config.json") as f:
-                config_data = json.load(f)
-                for agent in config_data["agents"]:
-                    self.insert_agent(
-                        agent["name"],
-                        agent["bio"],
-                        agent["traits"],
-                        agent["goals"],
-                        agent["active"],
-                    )
+        conn = self.get_conn()
+        with conn:
+            cursor = conn.execute(query)
+            count = cursor.fetchone()[0]
+            if count == 0:
+                with open("config.json") as f:
+                    config_data = json.load(f)
+                    for agent in config_data["agents"]:
+                        self.insert_agent(
+                            agent["name"],
+                            agent["bio"],
+                            agent["traits"],
+                            agent["goals"],
+                            agent["active"],
+                        )
+        self.disconnect(conn)
 
     def insert_agent(self, name, bio, traits, goals, active):
         query = """
             INSERT INTO agents (name, bio, traits, goals, active)
             VALUES (?, ?, ?, ?, ?)
         """
-        with self.conn:
-            self.conn.execute(
+        conn = self.get_conn()
+        with conn:
+            conn.execute(
                 query, (name, bio, json.dumps(traits), json.dumps(goals), active)
             )
+        self.disconnect(conn)
 
     def insert_dialog(self, agent_id, message):
         query = """
@@ -79,42 +83,50 @@ class WordDatabase:
             VALUES (?, ?)
         """
 
-        with self.conn:
-            self.conn.execute(query, (agent_id, message))
+        conn = self.get_conn()
+        with conn:
+            conn.execute(query, (agent_id, message))
+        self.disconnect(conn)
 
     def deactivate_agent(self, agent_id):
         query = """
             UPDATE agents SET active = 0 WHERE id = ?
         """
 
-        with self.conn:
-            self.conn.execute(query, (agent_id,))
+        conn = self.get_conn()
+        with conn:
+            conn.execute(query, (agent_id,))
+        self.disconnect(conn)
 
     def activate_agent(self, agent_id):
         query = """
             UPDATE agents SET active = 1 WHERE id = ?
         """
 
-        with self.conn:
-            self.conn.execute(query, (agent_id,))
+        conn = self.get_conn()
+        with conn:
+            conn.execute(query, (agent_id,))
+        self.disconnect(conn)
 
     def get_agents(self):
         query = """
             SELECT id, name, bio, traits, goals, active
             FROM agents
         """
+        new_agents = []
 
-        with self.conn:
-            cursor = self.conn.execute(query)
+        conn = self.get_conn()
+        with conn:
+            cursor = conn.execute(query)
             agents = cursor.fetchall()
-            new_agents = []
             for agent in agents:
                 id, name, bio, traits, goals, active = agent
                 goals = json.loads(goals)
                 traits = json.loads(traits)
                 new_agents.append((id, name, bio, traits, goals, active))
             print(new_agents)
-            return new_agents
+        self.disconnect(conn)
+        return new_agents
 
     def get_dialog(self):
         query = """
@@ -123,6 +135,10 @@ class WordDatabase:
             JOIN agents a ON d.agent_id = a.id
         """
 
-        with self.conn:
-            cursor = self.conn.execute(query)
-            return cursor.fetchall()
+        conn = self.get_conn()
+        dialogs = []
+        with conn:
+            cursor = conn.execute(query)
+            dialogs = cursor.fetchall()
+        self.disconnect(conn)
+        return dialogs

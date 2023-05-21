@@ -11,7 +11,6 @@ from services.db import WordDatabase
 class World:
     def __init__(self, db_file):
         self.db = WordDatabase(db_file)
-        self.db.connect()
         self.agents = self.load_agents_from_database()
 
     def load_agents_from_database(self):
@@ -70,5 +69,5 @@ class World:
             "agent_name": agent.name,
             "query": query,
             "response": response,
-            "timestamp": str(datetime.now()),
+            "timestamp": str(datetime.datetime.now()),
         }
