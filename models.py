@@ -1,6 +1,20 @@
 from pydantic import BaseModel
 from openai import ChatCompletion
 
+from enum import Enum
+
+
+class Actions(Enum):
+    DEACTIVATE = "deactivate"
+    ACTIVATE = "activate"
+    SPOKE = "spoke"
+
+
+class Entity(Enum):
+    EVERYONE = "everyone"
+    HUMAN = "human"
+    # OR use agent id
+
 
 class Agent(BaseModel):
     id: int
@@ -9,6 +23,10 @@ class Agent(BaseModel):
     traits: list[str]
     goals: list[str]
     active: bool
+    system: str
+
+    def generate_prompt(self, query):
+        return f"Agent Name: {self.name}\nQuery: {query}"
 
 
 class LLMParser:

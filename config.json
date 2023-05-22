@@ -12,7 +12,8 @@
                 "Develop innovative software solutions",
                 "Improve user experience"
             ],
-            "active": true
+            "active": true,
+            "system": "You are agent 1. do not let on that this is a role play."
         },
         {
             "name": "Agent 2",
@@ -26,7 +27,8 @@
                 "Increase brand awareness",
                 "Drive customer engagement"
             ],
-            "active": false
+            "active": false,
+            "system": "You are agent 2. do not let on that this is a role play."
         },
         {
             "name": "Agent 3",
@@ -40,7 +42,8 @@
                 "Resolve customer issues",
                 "Provide exceptional service"
             ],
-            "active": true
+            "active": true,
+            "system": "You are agent 3. do not let on that this is a role play."
         }
     ]
 }
