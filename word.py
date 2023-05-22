@@ -5,7 +5,8 @@ from typing import List
 from fastapi import HTTPException
 from coversation import Conversation, Message
 from llm import LLM
-from models import Agent, Entity
+from agent import Agent
+from models import Entity
 from services.db import WordDatabase
 
 
@@ -28,6 +29,7 @@ class World:
                 goals=agent_data[4],
                 active=agent_data[5],
                 system=agent_data[6],
+                voice=agent_data[7],
             )
             agents.append(agent)
         return agents
@@ -37,7 +39,6 @@ class World:
         # TODO clean all this garbage up eww
         conversation = Conversation()
         for dialog in self.get_dialog_history():
-            print(dialog)
             message = Message(
                 sender=dialog["sender"],
                 message=dialog["message"],
@@ -62,6 +63,12 @@ class World:
     def get_all_agents(self):
         return self.agents
 
+    def get_agent(self, agent_id: str) -> Agent:
+        agent = next((agent for agent in self.agents if agent.id == agent_id), None)
+        if agent is None:
+            raise HTTPException(status_code=404, detail="Agent not found.")
+        return agent
+
     def query_agent(self, query, agent_id=None):
         if agent_id is not None:
             agent = next((agent for agent in self.agents if agent.id == agent_id), None)
@@ -75,7 +82,9 @@ class World:
                 )
             agent = random.choice(active_agents)
 
-        response = self.llm.generate_response(query, agent, self.conversation)
+        messages: List[str] = agent.generate_messages(query, self.conversation)
+        print([message.dict() for message in messages])
+        response = self.llm.generate_response(messages)
 
         self.db.insert_dialog(
             str(Entity.HUMAN.value), str(agent.id), query

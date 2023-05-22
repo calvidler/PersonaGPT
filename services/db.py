@@ -29,7 +29,8 @@ class WordDatabase:
                 traits TEXT,
                 goals TEXT,
                 active INTEGER,
-                system TEXT
+                system TEXT,
+                voice TEXT
             )
         """
 
@@ -77,19 +78,28 @@ class WordDatabase:
                             agent["goals"],
                             agent["active"],
                             agent["system"],
+                            agent["voice"],
                         )
         self.disconnect(conn)
 
-    def insert_agent(self, name, bio, traits, goals, active, system):
+    def insert_agent(self, name, bio, traits, goals, active, system, voice):
         query = """
-            INSERT INTO agents (name, bio, traits, goals, active, system)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO agents (name, bio, traits, goals, active, system, voice)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         """
         conn = self.get_conn()
         with conn:
             conn.execute(
                 query,
-                (name, bio, json.dumps(traits), json.dumps(goals), active, system),
+                (
+                    name,
+                    bio,
+                    json.dumps(traits),
+                    json.dumps(goals),
+                    active,
+                    system,
+                    voice,
+                ),
             )
         self.disconnect(conn)
 
@@ -101,7 +111,6 @@ class WordDatabase:
 
         conn = self.get_conn()
         with conn:
-            print((sender, recipient, message))
             conn.execute(query, (sender, recipient, message))
         self.disconnect(conn)
 
@@ -124,7 +133,7 @@ class WordDatabase:
 
     def get_agents(self):
         query = """
-            SELECT id, name, bio, traits, goals, active, system
+            SELECT id, name, bio, traits, goals, active, system, voice
             FROM agents
         """
         new_agents = []
@@ -134,11 +143,10 @@ class WordDatabase:
             cursor = conn.execute(query)
             agents = cursor.fetchall()
             for agent in agents:
-                id, name, bio, traits, goals, active, system = agent
+                id, name, bio, traits, goals, active, system, voice = agent
                 goals = json.loads(goals)
                 traits = json.loads(traits)
-                new_agents.append((id, name, bio, traits, goals, active, system))
-            print(new_agents)
+                new_agents.append((id, name, bio, traits, goals, active, system, voice))
         self.disconnect(conn)
         return new_agents
 

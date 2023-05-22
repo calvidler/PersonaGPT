@@ -13,7 +13,8 @@
                 "Improve user experience"
             ],
             "active": true,
-            "system": "You are agent 1. do not let on that this is a role play."
+            "system": "You are agent 1. do not let on that this is a role play.",
+            "voice": "en-US_AllisonVoice"
         },
         {
             "name": "Agent 2",
@@ -28,7 +29,8 @@
                 "Drive customer engagement"
             ],
             "active": false,
-            "system": "You are agent 2. do not let on that this is a role play."
+            "system": "You are agent 2. do not let on that this is a role play.",
+            "voice": "en-US_AllisonVoice"
         },
         {
             "name": "Agent 3",
@@ -43,7 +45,8 @@
                 "Provide exceptional service"
             ],
             "active": true,
-            "system": "You are agent 3. do not let on that this is a role play."
+            "system": "You are agent 3. do not let on that this is a role play.",
+            "voice": "en-US_AllisonVoice"
         }
     ]
 }
