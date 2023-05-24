@@ -84,7 +84,6 @@ def query_all_agents(request: QueryRequest):
 
 @text_router.get("/dialog/history/human")
 def get_human_dialog_history():
-    print("HELLO")
     dialog_history = world.get_human_dialog_history()
     return dialog_history
 

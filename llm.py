@@ -1,9 +1,9 @@
 # LLM class
 from typing import List
 import openai
-from config import openai_key
 
 from models import ChatGPTMessage
+openai_key = "<TOKEN>"
 
 
 class LLM:
