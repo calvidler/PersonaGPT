@@ -83,7 +83,6 @@ class World:
             agent = random.choice(active_agents)
 
         messages: List[str] = agent.generate_messages(query, self.conversation)
-        print([message.dict() for message in messages])
         response = self.llm.generate_response(messages)
 
         self.db.insert_dialog(

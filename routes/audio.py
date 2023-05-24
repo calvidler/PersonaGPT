@@ -16,9 +16,9 @@ async def text_to_speech(body: dict = Body(...)):
     text = body["text"]
     agent_id = body.get("agent_id")
     
-    # tts = gTTS(text=text, lang="en")
+    tts = gTTS(text=text, lang="en")
     filename = "speech.mp3"
-    # tts.save(filename)
+    tts.save(filename)
 
     # download and load all models
     # preload_models()

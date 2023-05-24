@@ -7,7 +7,6 @@ def init_agent(agent_id: int):
         # Send agent id
         websocket.send(str(agent_id))
 
-
         while True:
             response = websocket.recv()
             print(f"Response from server: {response}")

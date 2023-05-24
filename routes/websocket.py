@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse
 import time
 from config import world
 from datetime import datetime
+import asyncio
 
 websocket_router = APIRouter()
 
@@ -11,9 +12,12 @@ class ConnectionManager:
         self.active_connections: list[WebSocket] = []
     
     async def agent_listen(self, agent_id: str, websocket: WebSocket, last_message_returned = None):
-        time.sleep(1)
+        await asyncio.sleep(1)
 
         conversation = world.get_agent_dialog_history(int(agent_id))
+
+        if len(conversation) == 0:
+            return
 
         sorted_conversation = sorted(conversation, key=lambda x: datetime.strptime(x["timestamp"], "%Y-%m-%d %H:%M:%S"))
 
@@ -50,6 +54,8 @@ async def websocket_endpoint(websocket: WebSocket):
     while True:
         try:
             agent_id = await websocket.receive_text()
+
+            # agent_id = agent_id["agent_id"]
 
             await manager.send(f"Talking to {agent_id}", websocket)
             # await manager.broadcast(f"Broadcast: {agent_id}")
