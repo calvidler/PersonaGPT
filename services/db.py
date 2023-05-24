@@ -178,7 +178,7 @@ class WordDatabase:
             dialogs = cursor.fetchall()
         self.disconnect(conn)
 
-        return self.format_dialog_response(dialogs)
+        return dialogs
 
     def get_human_dialog(self):
         query = """
@@ -194,7 +194,7 @@ class WordDatabase:
             dialogs = cursor.fetchall()
         self.disconnect(conn)
 
-        return self.format_dialog_response(dialogs)
+        return dialogs
 
     def insert_action(self, entity, action):
         query = """

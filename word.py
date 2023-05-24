@@ -143,10 +143,12 @@ class World:
         dialog_history = self.db.get_agent_dialog(agent_id)
         response = []
         for dialog in dialog_history:
-            dialog_id, agent_name, message, timestamp = dialog
+            print(dialog)
+            dialog_id, agent_id, agent_name, message, timestamp = dialog
             response.append(
                 {
                     "dialog_id": dialog_id,
+                    "agent_id": agent_id,
                     "agent_name": agent_name,
                     "message": message,
                     "timestamp": timestamp,
