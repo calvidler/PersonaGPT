@@ -2,6 +2,7 @@ fastapi
 pydantic
 openai
 uvicorn
+websockets
 
 
 # TO REMOVE

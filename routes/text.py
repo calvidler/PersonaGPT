@@ -53,7 +53,7 @@ def get_agent_dialog_history(agent_id: int):
 
 
 @text_router.post("/query/{agent_id}", description="Query a specific agent.")
-def query_agent(request: QueryRequest, agent_id: int = None):
+def query_agent_id(request: QueryRequest, agent_id: int):
     try:
         response = world.query_agent(request.query, agent_id)
         return QueryResponse(**response)

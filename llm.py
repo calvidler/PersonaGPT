@@ -3,7 +3,7 @@ from typing import List
 import openai
 
 from models import ChatGPTMessage
-openai_key = "<TOKEN>"
+openai_key = None
 
 
 class LLM:

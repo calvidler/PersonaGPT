@@ -138,12 +138,11 @@ class World:
     def get_agent_dialog_history(self, agent_id):
         agent = next((agent for agent in self.agents if agent.id == agent_id), None)
         if agent is None:
-            raise HTTPException(status_code=404, detail="Agent not found.")
+            raise Exception("Agent not found.")
 
         dialog_history = self.db.get_agent_dialog(agent_id)
         response = []
         for dialog in dialog_history:
-            print(dialog)
             dialog_id, agent_id, agent_name, message, timestamp = dialog
             response.append(
                 {
