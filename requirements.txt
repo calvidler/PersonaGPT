@@ -3,6 +3,7 @@ pydantic
 openai
 uvicorn
 websockets
+python-dotenv
 
 
 # TO REMOVE

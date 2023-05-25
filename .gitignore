@@ -7,3 +7,6 @@ __pycache__/
 .vscode/
 
 *.mp3
+
+# Save Private Keys
+.env

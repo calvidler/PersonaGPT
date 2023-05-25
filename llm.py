@@ -1,9 +1,15 @@
 # LLM class
+import os
+
 from typing import List
 import openai
-
 from models import ChatGPTMessage
-openai_key = None
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+openai_key = os.getenv('OPENAI_API_KEY')
 
 
 class LLM:
