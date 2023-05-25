@@ -57,7 +57,8 @@ async def speech_to_text(in_file: UploadFile = File(...)):
         with open(tmp_filename, 'wb') as f:
             f.write(contents)
     except Exception as e:
-        return {"message": f"There was an error uploading the file {in_file.filename}; {e}"}
+        # Prompt where GPT can pretend they dont undertstand
+        return {"message": "What would you say if you can't understand what I am saying"} #f"There was an error uploading the file {in_file.filename}; {e}"
     
     finally:
         in_file.file.close()
@@ -66,7 +67,8 @@ async def speech_to_text(in_file: UploadFile = File(...)):
     try:
         result = whisper_model.transcribe(tmp_filename)
     except Exception as e:
-        return {"message": f"There was an error transcribing the file {in_file.filename}; {e}"}
+        # Prompt where GPT can pretend they dont undertstand
+        return {"message": "What would you say if you can't understand what I am saying"} #f"There was an error transcribing the file {in_file.filename}; {e}"
     finally:
         # Delete the temporary file
         os.remove(tmp_filename)
