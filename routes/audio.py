@@ -3,7 +3,7 @@ from gtts import gTTS
 import aiofiles
 import os
 
-import whisper
+import openai
 import uuid
 import os.path
 
@@ -12,9 +12,6 @@ import os.path
 # from IPython.display import Audio
 
 audio_router = APIRouter()
-
-# Load Model
-whisper_model = whisper.load_model("base")
 
 @audio_router.post("/text-to-speech/")
 async def text_to_speech(body: dict = Body(...)):
@@ -59,19 +56,16 @@ async def speech_to_text(in_file: UploadFile = File(...)):
     except Exception as e:
         # Prompt where GPT can pretend they dont undertstand
         return {"message": "What would you say if you can't understand what I am saying"} #f"There was an error uploading the file {in_file.filename}; {e}"
-    
-    finally:
-        in_file.file.close()
 
     # Transcribe the audio file
     try:
-        result = whisper_model.transcribe(tmp_filename)
+        transcript = openai.Audio.translate("whisper-1", open(tmp_filename,'rb'))
     except Exception as e:
         # Prompt where GPT can pretend they dont undertstand
-        return {"message": "What would you say if you can't understand what I am saying"} #f"There was an error transcribing the file {in_file.filename}; {e}"
+        return {"message": f"What would you say if you can't understand what I am saying"} #f"There was an error transcribing the file {in_file.filename}; {e}"
     finally:
         # Delete the temporary file
         os.remove(tmp_filename)
 
-    return {'message': result["text"]}
+    return {'message': transcript.text}
 
