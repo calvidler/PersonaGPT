@@ -62,7 +62,7 @@ async def speech_to_text(in_file: UploadFile = File(...)):
         transcript = openai.Audio.translate("whisper-1", open(tmp_filename,'rb'))
     except Exception as e:
         # Prompt where GPT can pretend they dont undertstand
-        return {"message": f"What would you say if you can't understand what I am saying"} #f"There was an error transcribing the file {in_file.filename}; {e}"
+        return {"message": "What would you say if you can't understand what I am saying"} #f"There was an error transcribing the file {in_file.filename}; {e}"
     finally:
         # Delete the temporary file
         os.remove(tmp_filename)
