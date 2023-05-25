@@ -1,12 +1,23 @@
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
 
 from routes.text import text_router
 from routes.audio import audio_router
 from routes.websocket import websocket_router
 
 app = FastAPI()
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")

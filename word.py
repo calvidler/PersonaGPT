@@ -88,7 +88,9 @@ class World:
         self.db.insert_dialog(
             str(Entity.HUMAN.value), str(agent.id), query
         )  # human is the sender of query!
-        self.db.insert_dialog(str(agent.id), str(Entity.HUMAN.value), response)
+        self.db.insert_dialog(
+            str(agent.id), str(Entity.HUMAN.value), response.split(":")[1]
+        )
 
         return {
             "agent_id": agent.id,
