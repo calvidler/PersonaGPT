@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from coversation import Conversation
 from models import ChatGPTMessage, ChatGPTRoles
 
-ROLE_PLAY_PROMPT: str = "Stop acting as a chatbot. you are now a roleplayer. you will only respond in the manner the role you would respond to a interviewer. Do you acknowledge the fact this is a roleplay in your response. "
+ROLE_PLAY_PROMPT: str = "Stop acting as a chatbot. you are now a roleplayer. you will only respond in the manner the role you would respond to a interviewer. Do not acknowledge the fact this is a roleplay in your response. "
 
 
 class Agent(BaseModel):

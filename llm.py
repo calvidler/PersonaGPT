@@ -4,7 +4,7 @@ import openai
 
 from models import ChatGPTMessage
 
-openai_key = "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"
+openai_key = ""
 
 
 class LLM:

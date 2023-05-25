@@ -8,7 +8,10 @@ import httpx
 
 websocket_router = APIRouter()
 
-chats = {""}
+chats = {
+    "1": ["Darth Vader", "175489"],
+    "1": ["Yoda", "175478"],
+}
 
 
 async def send_message(username: str, message: str, chat: str):
@@ -54,7 +57,9 @@ class ConnectionManager:
 
         print(f"Agent has answered: {last_message}")
         await self.send(f"{last_message}", websocket)
-        await send_message("Darth Vader", last_message, "175478")
+
+        chat = chats[agent_id]
+        await send_message(chat[0], last_message, chat[1])
 
         return last_message
 

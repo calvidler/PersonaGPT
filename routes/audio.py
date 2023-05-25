@@ -43,8 +43,12 @@ async def text_to_speech(body: dict = Body(...)):
     return Response(content, media_type="audio/mpeg")
 
 
+openai_key = ""
+
+
 @audio_router.post("/speech-to-text/")
 async def speech_to_text(in_file: UploadFile = File(...)):
+    openai.api_key = openai_key
     # Upload and save the file to disk
     try:
         contents = await in_file.read()
@@ -64,11 +68,12 @@ async def speech_to_text(in_file: UploadFile = File(...)):
         transcript = openai.Audio.translate("whisper-1", open(tmp_filename, "rb"))
     except Exception as e:
         # Prompt where GPT can pretend they dont undertstand
+        # raise e
         return {
-            "message": f"What would you say if you can't understand what I am saying"
+            "message": f"OPENAI ERROR {e}"
         }  # f"There was an error transcribing the file {in_file.filename}; {e}"
     finally:
         # Delete the temporary file
         os.remove(tmp_filename)
 
-    return {"message": transcript.text}
+    return transcript.text
