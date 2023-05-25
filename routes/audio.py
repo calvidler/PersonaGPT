@@ -7,6 +7,11 @@ import openai
 import uuid
 import os.path
 
+from dotenv import load_dotenv
+load_dotenv()
+
+openai_key = os.getenv('OPENAI_API_KEY')
+
 # from bark import SAMPLE_RATE, generate_audio, preload_models
 # from scipy.io.wavfile import write as write_wav
 # from IPython.display import Audio
